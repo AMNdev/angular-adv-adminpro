@@ -7,26 +7,27 @@
         <app-sidebar></app-sidebar>
 
         <div class="page-wrapper">
-            <!-- breadcrumbs -->
-            <app-breadcrumbs></app-breadcrumbs>
-
-            <!-- Mi sistema de rutas -->
             <div class="container-fluid">
+            
+                <!-- breadcrumbs -->
+                <app-breadcrumbs></app-breadcrumbs>
+                
+                <!-- Mi sistema de rutas -->
+                <router-outlet></router-outlet>
 
                 <!-- ==================================================== -->
                 <!-- Start Page Content -->
                 <!-- ==================================================== -->
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <!-- This is some text within a card block. -->
-                                <router-outlet></router-outlet>
+                                This is some text within a card block.
                                 
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <!-- ============================================================== -->
                 <!-- End PAge Content -->
                 <!-- ============================================================== -->
