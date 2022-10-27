@@ -1,24 +1,20 @@
+<div id="main-wrapper">
+  <app-header></app-header>
 
-    <div id="main-wrapper">
+  <app-sidebar></app-sidebar>
 
-        <app-header></app-header>
+  <div class="page-wrapper">
+    <div class="container-fluid">
+      <!-- breadcrumbs -->
+      <app-breadcrumbs></app-breadcrumbs>
 
+      <!-- Mi sistema de rutas -->
+      <router-outlet></router-outlet>
 
-        <app-sidebar></app-sidebar>
-
-        <div class="page-wrapper">
-            <div class="container-fluid">
-            
-                <!-- breadcrumbs -->
-                <app-breadcrumbs></app-breadcrumbs>
-                
-                <!-- Mi sistema de rutas -->
-                <router-outlet></router-outlet>
-
-                <!-- ==================================================== -->
-                <!-- Start Page Content -->
-                <!-- ==================================================== -->
-                <!-- <div class="row">
+      <!-- ==================================================== -->
+      <!-- Start Page Content -->
+      <!-- ==================================================== -->
+      <!-- <div class="row">
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
@@ -28,22 +24,18 @@
                         </div>
                     </div>
                 </div> -->
-                <!-- ============================================================== -->
-                <!-- End PAge Content -->
-                <!-- ============================================================== -->
-            </div>
-
-            <!-- footer -->
-            <!-- ============================================================== -->
-            <footer class="footer">
-                © 2022 Admin Pro by WestDevelop
-            </footer>
-            <!-- ============================================================== -->
-            <!-- End footer -->
-            <!-- ============================================================== -->
-        </div>
-
-
+      <!-- ============================================================== -->
+      <!-- End PAge Content -->
+      <!-- ============================================================== -->
     </div>
 
+    <!-- footer -->
+    <!-- ============================================================== -->
+    <footer class="footer">© 2022 Admin Pro by WestDevelop</footer>
+    <!-- ============================================================== -->
+    <!-- End footer -->
+    <!-- ============================================================== -->
+  </div>
+</div>
 
+<app-modal-imagen></app-modal-imagen>

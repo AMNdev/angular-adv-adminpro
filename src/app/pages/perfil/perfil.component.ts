@@ -44,7 +44,7 @@ export class PerfilComponent implements OnInit {
 
         // modal sweetalert
         Swal.fire({
-          position: 'bottom-start',
+          position: 'center-start',
           icon: 'info',
           title: 'Usuario actualizado',
           showConfirmButton: true,

@@ -16,13 +16,18 @@ export class Usuario {
   get imagenUrl() {
     // /upload/usuarios/pepe
 
+
+
     if (this.img) {
       if (this.img?.includes('https')) {
+        console.log(this.img);
         return this.img;
+      } else {
+        return `${base_url}/upload/usuarios/${this.img}`;
       }
-      return `${base_url}/upload/usuarios/${this.img}`;
     } else {
       return `${base_url}/upload/usuarios/no-image`;
     }
+
   }
 }
