@@ -22,44 +22,60 @@ const base_url = environment.base_url;
 export class UsuarioService {
   public usuario: Usuario | undefined;
 
-
   constructor(
     private http: HttpClient,
     private router: Router,
     private ngZone: NgZone
   ) {}
 
-  get token(): string{
+  get token(): string {
     return localStorage.getItem('token') || '';
   }
 
-  get uid(): string{
-    return this.usuario?.uid || ''
+  get role(): 'ADMIN_ROLE'|'USER_ROLE' {
+    return this.usuario?.role!
+  }
+
+  get uid(): string {
+    return this.usuario?.uid || '';
   }
 
   get headers() {
-    return {headers: {
-      'x-token': this.token,
-    }}
+    return {
+      headers: {
+        'x-token': this.token,
+      },
+    };
+  }
+
+  // Guardar token y menu en localstorage
+  guardarLocalStorage(token: string, menu: any) {
+    localStorage.setItem('token', token);
+    localStorage.setItem('menu', JSON.stringify(menu));
   }
 
   // logout
   logout() {
+    console.log(this.usuario);
     localStorage.removeItem('token');
+    localStorage.removeItem('menu');
 
     // google
-    google.accounts.id.revoke('antonio.marqueznovella@gmail.com', () => {
+
+    if (this.usuario?.google ) {
+      google.accounts.id.revoke(this.usuario?.email, () => {
       this.ngZone.run(() => {
         this.router.navigateByUrl('/login');
       });
     });
+    }
+    
     this.router.navigateByUrl('/login');
 
   }
 
   // comprobar-validar token
   validarToken(): Observable<boolean> {
-
     return this.http
       .get(`${base_url}/login/renew`, {
         headers: {
@@ -73,8 +89,9 @@ export class UsuarioService {
 
           this.usuario = new Usuario(nombre, email, '', img, google, role, uid);
 
-          localStorage.setItem('token', resp.token);
-          return true
+          this.guardarLocalStorage(resp.token, resp.menu);
+
+          return true;
         }),
         catchError((error) => of(false))
       );
@@ -83,28 +100,30 @@ export class UsuarioService {
   crearUsuario(formData: RegisterForm) {
     return this.http.post(`${base_url}/usuarios`, formData).pipe(
       tap((resp: any) => {
-        localStorage.setItem('token', resp.token);
+        this.guardarLocalStorage(resp.token, resp.menu);
+
       })
     );
   }
 
-  actualizarPerfil(data: { email: string, nombre: string, role: string }) {
-    
+  actualizarPerfil(data: { email: string; nombre: string; role: string }) {
     data = {
       ...data,
-      role: this.usuario?.role||''
-    }
-    
-    
-    return this.http.put(`${base_url}/usuarios/${this.uid}`, data, this.headers)
+      role: this.usuario?.role || '',
+    };
+
+    return this.http.put(
+      `${base_url}/usuarios/${this.uid}`,
+      data,
+      this.headers
+    );
   }
-
-
 
   login(formData: LoginForm) {
     return this.http.post(`${base_url}/login`, formData).pipe(
       tap((resp: any) => {
-        localStorage.setItem('token', resp.token);
+        this.guardarLocalStorage(resp.token, resp.menu);
+
       }),
       tap(() => this.router.navigateByUrl('/dashboard'))
     );
@@ -113,43 +132,49 @@ export class UsuarioService {
   loginGoogle(token: string) {
     return this.http.post(`${base_url}/login/google`, { token }).pipe(
       tap((resp: any) => {
-        // console.log(resp);
-        localStorage.setItem('token', resp.token);
+        this.guardarLocalStorage(resp.token, resp.menu);
+
       })
     );
   }
 
-  cargarUsuarios(desde:number=0) {
+  cargarUsuarios(desde: number = 0) {
     const url = `${base_url}/usuarios?desde=${desde}`;
 
-    return this.http.get<CargarUsuario>(url, this.headers)
-      .pipe(
-        map(resp => {
-          const usuarios = resp.usuarios.map(
-            user=> new Usuario(user.nombre,user.email,'',user.img, user.google, user.role, user.uid)
-          )
-          // console.log(resp);          
+    return this.http.get<CargarUsuario>(url, this.headers).pipe(
+      map((resp) => {
+        const usuarios = resp.usuarios.map(
+          (user) =>
+            new Usuario(
+              user.nombre,
+              user.email,
+              '',
+              user.img,
+              user.google,
+              user.role,
+              user.uid
+            )
+        );
 
-          return {
-            total: resp.total,
-            usuarios
-          };
+        return {
+          total: resp.total,
+          usuarios,
+        };
       })
-    )
-    
+    );
   }
 
   eliminarUsuario(usuario: Usuario) {
     // /usuarios/id
     const url = `${base_url}/usuarios/${usuario.uid}`;
     return this.http.delete(url, this.headers);
-
   }
 
-
-  guardarUsuario(usuario:Usuario) {
-    
-    
-    return this.http.put(`${base_url}/usuarios/${usuario.uid}`, usuario, this.headers)
+  guardarUsuario(usuario: Usuario) {
+    return this.http.put(
+      `${base_url}/usuarios/${usuario.uid}`,
+      usuario,
+      this.headers
+    );
   }
 }
