@@ -56,7 +56,6 @@ export class UsuarioService {
 
   // logout
   logout() {
-    console.log(this.usuario);
     localStorage.removeItem('token');
     localStorage.removeItem('menu');
 
